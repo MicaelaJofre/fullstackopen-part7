@@ -1,60 +1,45 @@
-import { servicesBlog } from '../services/blogs'
+import { createSlice } from '@reduxjs/toolkit'
+import servicesBlog from '../services/blogs.js'
 
-export const blogReducer = (state = [], action) => {
-
-    switch (action.type) {
-        case '@blog/initialize': {
-            return action.data
-        }
-
-        case '@blog/create': {
-            return [...state, action.data]
-        }
-
-        case '@blog/likes': {
-            let id = action.data.id
-            const blogToChange = state.find(s => s.id === id)
-            return state.map(blog =>
-                blog.id !== id ? blog : {
-                    ...blogToChange,
-                    likes: blogToChange.likes + 1
-                }
-            ).sort((a, b) => b.likes - a.likes)
-        }
-
-        case '@blog/delete': {
-            let blogId = action.data.id
-            return state.filter(blog =>
-                blog.id !== blogId
+const initialState = []
+const blogsSlice = createSlice({
+    name: 'blogs',
+    initialState,
+    reducers: {
+        initializeBlog(state, action) {
+            return action.payload
+        },
+        createBlog(state, action) {
+            return [...state, action.payload]
+        },
+        removeBlog(state, action) {
+            return state.filter((blog) => blog.id !== action.payload)
+        },
+        updateBlog(state, action) {
+            const updatedBlog = action.payload
+            return state.map((blog) =>
+                blog.id === updatedBlog.id ? updatedBlog : blog
             )
         }
-        default: {
-            return state
-        }
-
     }
+})
 
-}
+const { initializeBlog, createBlog, removeBlog, updateBlog } = blogsSlice.actions
 
 
-export const blogInitialize = () => {
+
+
+export const getBlogs = () => {
     return async dispatch => {
-        const blogs = servicesBlog.getAll()
-        dispatch({
-            type: '@blog/initialize',
-            data: blogs
-        })
+        const blogs = await servicesBlog.getAll()
+        dispatch(initializeBlog(blogs))
     }
-
 }
 
-export const blogCreate = (content) => {
+export const addBlog = (content) => {
     return async dispatch => {
         const newBlog = await servicesBlog.create(content)
-        dispatch({
-            type: '@blog/create',
-            data: newBlog
-        })
+        dispatch(createBlog(newBlog))
     }
 }
 
@@ -66,11 +51,8 @@ export const blogLikes = (id) => {
             ...blog,
             likes: blog.likes + 1
         }
-        const updateBlog = await servicesBlog.update(id, changeBlog)
-        dispatch({
-            type: '@blog/likes',
-            data: updateBlog
-        })
+        const updatedBlog = await servicesBlog.update(id, changeBlog)
+        dispatch(updateBlog(updatedBlog))
     }
 }
 
@@ -78,10 +60,9 @@ export const blogDelete = (id) => {
     return async dispatch => {
         const blogs = await servicesBlog.getAll()
         const blog = blogs.find(b => b.id === id)
-        const removeBlog = await servicesBlog.remove(blog.id)
-        dispatch({
-            type: '@blog/delete',
-            data: removeBlog
-        })
+        const removedBlog = await servicesBlog.remove(blog.id)
+        dispatch(removeBlog(removedBlog))
     }
 }
+
+export default blogsSlice.reducer
