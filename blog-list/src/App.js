@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
@@ -6,29 +7,14 @@ import loginService from './services/login'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import './main.css'
-import { blogInitialize } from './reducers/blogsReducer'
+import { getBlogs, addBlog } from './reducers/blogsReducer'
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
-
     const [user, setUser] = useState(null)
     const [messageNotification, setMessageNotification] = useState({ message: null, status: null })
 
-    useEffect(() => {
-
-        /* const sortPostsByLikes = (posts) => {
-            return posts.sort((a, b) => b.likes - a.likes)
-        }
-
-        const getBlogs = async () => {
-            const blogs = await blogService.getAll()
-            setBlogs(sortPostsByLikes(blogs))
-        }
-        getBlogs()*/
-
-        blogInitialize()
-
-    }, [])
+    const blogs = useSelector(state => state.blogs)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -38,6 +24,9 @@ const App = () => {
             setUser(user)
             blogService.setToken(user.token)
         }
+
+        dispatch(getBlogs())
+
     }, [])
 
     const addUser = async (userObject) => {
@@ -69,14 +58,13 @@ const App = () => {
     }
 
 
-    const addBlog = async (blogObject) => {
+    const handleCreate = async (blogObject) => {
 
         try {
 
-            const returnedBlog = await blogService.create(blogObject)
-            setBlogs(blogs.concat(returnedBlog))
+            dispatch(addBlog(blogObject))
 
-            setMessageNotification({ message: `A new blog ${returnedBlog.title} by ${returnedBlog.author}`, status: 'message' })
+            setMessageNotification({ message: `A new blog ${blogObject.title} by ${blogObject.author}`, status: 'message' })
             setTimeout(() => {
                 setMessageNotification({ message: null, status: null })
             }, 5000)
@@ -93,17 +81,18 @@ const App = () => {
     const updateBlog = async (blog) => {
 
         try {
-            const newBlog = {
+            console.log(blog)
+            /* const newBlog = {
                 user: blog.user.id,
                 likes: blog.likes + 1,
                 author: blog.author,
                 title: blog.title,
                 url: blog.url
-            }
+            } */
 
-            const updateBlog = await blogService.update(blog.id, newBlog)
-            setBlogs(blogs.map(blog => blog.id === updateBlog.id ? updateBlog : blog))
-
+            /*    const updateBlog = await blogService.update(blog.id, newBlog) */
+            /*   setBlogs(blogs.map(blog => blog.id === updateBlog.id ? updateBlog : blog))
+   */
         } catch (error) {
             setMessageNotification({ message: 'Error liking on blog', status: 'error' })
             setTimeout(() => {
@@ -117,7 +106,7 @@ const App = () => {
         try {
             if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
                 await blogService.remove(blog.id)
-                setBlogs(blogs.filter(b => b.id !== blog.id))
+                /*   setBlogs(blogs.filter(b => b.id !== blog.id)) */
             }
         } catch (error) {
             setMessageNotification({ message: 'Error deleting blog', status: 'error' })
@@ -136,7 +125,7 @@ const App = () => {
                 user
                     ? <><h1>Blogs</h1>
                         <span>{user.name} logged in </span>
-                        <BlogForm createBlog={addBlog} />
+                        <BlogForm createBlog={handleCreate} />
                     </>
 
                     : <LoginForm createUser={addUser} />
