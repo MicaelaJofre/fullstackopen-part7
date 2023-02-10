@@ -2,11 +2,14 @@ import { useState } from 'react'
 import Togglable from './Togglable'
 import PropTypes from 'prop-types'
 import { useField } from '../hooks/form'
+import { useDispatch } from 'react-redux'
+import { logoutUser } from '../reducers/userReducer'
 
 
 const BlogForm = ({ createBlog }) => {
 
     const [visible, setVisible] = useState(false)
+    const dispatch = useDispatch()
 
     const Children = () => {
 
@@ -53,7 +56,7 @@ const BlogForm = ({ createBlog }) => {
 
 
     const handleSingOut = () => {
-        window.localStorage.removeItem('loggedBlogappUser')
+        dispatch(logoutUser())
         window.location.reload()
     }
 
