@@ -10,15 +10,28 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         getUser(state, action) {
+            window.localStorage.setItem('user', JSON.stringify(action.payload))
             blogService.setToken(action.payload.token)
             return action.payload
+        },
+        logout() {
+            window.localStorage.removeItem('user')
+            return null
         }
     }
 })
 
-const { getUser } = userSlice.actions
+const { getUser, logout } = userSlice.actions
 
-export const initialUser = (user) => {
+export const initialUser = () => {
+    return async (dispatch) => {
+        const user = window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')) : null
+        if (!user) return
+        dispatch(getUser(user))
+    }
+}
+
+export const loginUser = (user) => {
     return async dispatch => {
         try {
             const logged = await loginService.login(user)
@@ -29,5 +42,12 @@ export const initialUser = (user) => {
         }
     }
 }
+
+export const logoutUser = () => {
+    return dispatch => {
+        dispatch(logout())
+    }
+}
+
 
 export default userSlice.reducer
