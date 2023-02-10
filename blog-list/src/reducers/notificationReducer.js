@@ -16,7 +16,6 @@ const notificationSlice = createSlice({
 const { setNotification } = notificationSlice.actions
 
 export const createNotification = (message, status, time) => {
-    console.log(time)
     return async dispach => {
         const timeout = setTimeout(() => { dispach(setNotification(initialState)) }, time * 1000)
         dispach(setNotification({ message, status, timeout }))
