@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import servicesBlog from '../services/blogs.js'
+import { createNotification } from './notificationReducer.js'
 
 const initialState = []
 const blogsSlice = createSlice({
@@ -12,14 +13,14 @@ const blogsSlice = createSlice({
         createBlog(state, action) {
             return [...state, action.payload]
         },
-        removeBlog(state, action) {
-            return state.filter((blog) => blog.id !== action.payload)
-        },
         updateBlog(state, action) {
             const updatedBlog = action.payload
             return state.map((blog) =>
                 blog.id === updatedBlog.id ? updatedBlog : blog
-            )
+            ).sort((a, b) => b - a)
+        },
+        removeBlog(state, action) {
+            return state.filter((blog) => blog.id !== action.payload)
         }
     }
 })
@@ -38,30 +39,45 @@ export const getBlogs = () => {
 
 export const addBlog = (content) => {
     return async dispatch => {
-        const newBlog = await servicesBlog.create(content)
-        dispatch(createBlog(newBlog))
+        try {
+            const newBlog = await servicesBlog.create(content)
+            dispatch(createBlog(newBlog))
+            dispatch(createNotification(`A new blog ${content.title} by ${content.author}`, 'message', 2))
+
+        } catch (error) {
+            dispatch(createNotification('Error adding new message', 'error', 2))
+        }
     }
 }
 
 export const blogLikes = (id) => {
     return async dispatch => {
-        const blogs = await servicesBlog.getAll()
-        const blog = blogs.find(b => b.id === id)
-        const changeBlog = {
-            ...blog,
-            likes: blog.likes + 1
+        try {
+            const blogs = await servicesBlog.getAll()
+            const blog = blogs.find(b => b.id === id)
+            const changeBlog = {
+                ...blog,
+                likes: blog.likes + 1
+            }
+            const updatedBlog = await servicesBlog.update(id, changeBlog)
+            dispatch(updateBlog(updatedBlog))
+
+        } catch (error) {
+            dispatch(createNotification('Error liking on blog', 'error', 2))
         }
-        const updatedBlog = await servicesBlog.update(id, changeBlog)
-        dispatch(updateBlog(updatedBlog))
     }
 }
 
 export const blogDelete = (id) => {
     return async dispatch => {
-        const blogs = await servicesBlog.getAll()
-        const blog = blogs.find(b => b.id === id)
-        const removedBlog = await servicesBlog.remove(blog.id)
-        dispatch(removeBlog(removedBlog))
+        try {
+            const { status } = await servicesBlog.remove(id)
+            status === 204 && dispatch(removeBlog(id))
+        } catch (error) {
+            error.response.status === 401
+                ? dispatch(createNotification('User not authorized to remove this blog', 'error', 2))
+                : dispatch(createNotification('Error deleting blog', 'error', 2))
+        }
     }
 }
 
