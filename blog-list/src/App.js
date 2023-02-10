@@ -5,7 +5,7 @@ import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import { getBlogs, addBlog, blogLikes, blogDelete } from './reducers/blogsReducer'
-import { initialUser } from './reducers/userReducer'
+import { initialUser, loginUser } from './reducers/userReducer'
 import './main.css'
 
 const App = () => {
@@ -16,12 +16,13 @@ const App = () => {
 
     useEffect(() => {
         dispatch(getBlogs())
+        dispatch(initialUser())
     }, [])
 
     const addUser = (userObject) => {
-        dispatch(initialUser(userObject))
-    }
+        dispatch(loginUser(userObject))
 
+    }
 
     const handleCreate = (blogObject) => {
         dispatch(addBlog(blogObject))
