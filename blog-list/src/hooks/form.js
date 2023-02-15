@@ -8,9 +8,14 @@ export const useField = (id) => {
         setValue(e.target.value)
     }
 
+    const reset = () => {
+        setValue('')
+    }
+
     return {
         id,
         value,
-        onChange
+        onChange,
+        reset
     }
 }
