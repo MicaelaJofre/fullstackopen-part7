@@ -1,21 +1,19 @@
 import { useState } from 'react'
-import Togglable from './Togglable'
 import PropTypes from 'prop-types'
+import Togglable from './Togglable'
 import { useField } from '../hooks/form'
-import { useDispatch } from 'react-redux'
-import { logoutUser } from '../reducers/userReducer'
+
 
 
 const BlogForm = ({ createBlog }) => {
 
     const [visible, setVisible] = useState(false)
-    const dispatch = useDispatch()
 
     const Children = () => {
 
-        const title = useField('title')
-        const author = useField('author')
-        const url = useField('url')
+        const { reset: resetTitle, ...title } = useField('title')
+        const { reset: resetAuthor, ...author } = useField('author')
+        const { reset: resetUrl, ...url } = useField('url')
 
         const handleCreateBlog = (event) => {
             event.preventDefault()
@@ -25,7 +23,11 @@ const BlogForm = ({ createBlog }) => {
                 url: url.value
             })
             setVisible(true)
+            resetTitle()
+            resetAuthor()
+            resetUrl()
         }
+
 
         return (
             <>
@@ -53,16 +55,8 @@ const BlogForm = ({ createBlog }) => {
         createBlog: PropTypes.func.isRequired
     }
 
-
-
-    const handleSingOut = () => {
-        dispatch(logoutUser())
-        window.location.reload()
-    }
-
     return (
         <div>
-            <button onClick={handleSingOut}>Logout</button>
             <Togglable buttonLabel='Create a new blog' closeForm={visible}>
                 <Children />
             </Togglable>
