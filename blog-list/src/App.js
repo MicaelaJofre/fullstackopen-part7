@@ -32,15 +32,17 @@ const App = () => {
         : null
 
     return (
-        <div className="container">
-            <Menu />
-            <Routes>
-                <Route path='/' element={<BlogsList blog={blog} />} />
-                <Route path='/blogs/:id' element={<Blog blog={blog} />} />
-                <Route path='/users' element={<Users />} />
-                <Route path='/users/:id' element={<UserListBlogs blogsUser={blogsUser} />} />
-            </Routes>
-        </div>
+        <div className='bg-dark text-white' style={{ minHeight: '100vh' }}>
+            <div className="container p-2">
+                < Menu />
+                <Routes>
+                    <Route path='/' element={<BlogsList blog={blog} />} />
+                    <Route path='/blogs/:id' element={<Blog blog={blog} />} />
+                    <Route path='/users' element={<Users />} />
+                    <Route path='/users/:id' element={<UserListBlogs blogsUser={blogsUser} />} />
+                </Routes>
+            </div >
+        </div >
     )
 }
 
