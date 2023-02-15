@@ -1,34 +1,43 @@
-import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { blogDelete, blogLikes } from '../reducers/blogsReducer'
+import Comments from './Comments'
 
-const Blog = ({ blog, username, handleLikes, handleDelete }) => {
+const Blog = ({ blog }) => {
 
-    const [show, setShow] = useState(false)
+    const user = useSelector(state => state.user)
 
-    const handleShow = () => {
-        setShow(!show)
+    const dispatch = useDispatch()
+
+    const handleLikes = (blog) => {
+        dispatch(blogLikes(blog.id))
+    }
+    const handleDelete = (blog) => {
+        if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+            dispatch(blogDelete(blog.id))
+        }
     }
 
     return (
-        <div key={blog.id} className='blogList blog' >
-            <div className='blogList'>
-                <span>{blog.title} -  </span>
-                <span>Author: {blog.author}</span>
-                <button onClick={handleShow}>view</button>
-            </div>
+        <div>
+            <h2>Blog App</h2>
             {
-                show &&
-                <div>
-                    <div>Url: {blog.url}</div>
-                    <div>
-                        Likes: {blog.likes}
-                        <button onClick={() => handleLikes(blog)}>like</button>
+                blog && user
+                    ? <div>
+                        <h3>{blog.title}</h3>
+                        <div>{blog.url}</div>
+                        <div>
+                            Likes: {blog.likes}
+                            <button onClick={() => handleLikes(blog)}>like</button>
+                        </div>
+                        <span>Added by {blog.author}</span>
+                        <div>
+                            {user.username === blog.user.username && <button onClick={() => handleDelete(blog)}>Remove</button>}
+                        </div>
                     </div>
-                    <div>User: {blog.user.name}</div>
-                    {username === blog.user.username && <button onClick={() => handleDelete(blog)}>Remove</button>}
-                </div>
+                    : <p>No blogs created</p>
             }
+            <Comments blog={blog} />
         </div>
-
     )
 }
 
