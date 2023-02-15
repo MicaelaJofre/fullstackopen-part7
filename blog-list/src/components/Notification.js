@@ -12,11 +12,11 @@ const Notification = () => {
         <div className="container">
             {(
                 notification.status === 'message'
-                    ? <Alert variant="success">
+                    ? <Alert className='text-uppercase fw-bold' variant="success">
                         {notification.message}
                     </Alert>
                     : notification.status === 'error'
-                        ? <Alert variant="danger">
+                        ? <Alert className='text-uppercase fw-bold' variant="danger">
                             {notification.message}
                         </Alert>
                         : null

@@ -28,25 +28,27 @@ const BlogsList = () => {
             {
                 user
                     ? <>
-                        <h1>Blog app</h1>
+                        <h1 className='pb-4 pt-4'>Blog app</h1>
                         <BlogForm createBlog={handleCreate} />
                     </>
                     : <LoginForm createUser={handleUser} />
             }
-            <Table striped bordered hover variant="dark">
+            <Table striped bordered hover variant="dark" >
                 <tbody>
                     {
                         user
                             ? blogs.length !== 0
                                 ? blogs.map(blog =>
-                                    <tr key={blog.id}>
-                                        <td>
-                                            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                                    <tr key={blog.id} >
+                                        <td className='text-capitalize'>
+                                            <Link className='text-decoration-none text-white' to={`/blogs/${blog.id}`}>{blog.title}</Link>
                                         </td>
 
                                     </tr>
                                 )
-                                : <p>No blog created</p>
+                                : <tr>
+                                    <td>No blog created</td>
+                                </tr>
                             : null
                     }
 

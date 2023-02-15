@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { Button } from 'react-bootstrap'
+import { Button, Stack } from 'react-bootstrap'
 
 
 const Togglable = ({ children, buttonLabel, closeForm }) => {
@@ -24,12 +24,14 @@ const Togglable = ({ children, buttonLabel, closeForm }) => {
 
     return (
         <div>
-            <div style={hideWhenVisible}>
-                <Button variant="warning" onClick={() => setVisible(true)}>{buttonLabel}</Button>
+            <div style={hideWhenVisible} className='pb-4'>
+                <Button className='fw-bold hover-overlay' variant="warning" onClick={() => setVisible(true)}>{buttonLabel}</Button>
             </div>
             <div style={showWhenVisible}>
                 {children}
-                <Button variant="warning" onClick={() => setVisible(false)}>Cancel</Button>
+                <Stack className="col-md-5 mb-2">
+                    <Button className='fw-bold hover-overlay' variant="warning" onClick={() => setVisible(false)}>Cancel</Button>
+                </Stack>
             </div>
         </div>
 

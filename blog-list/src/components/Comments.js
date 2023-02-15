@@ -18,18 +18,18 @@ const Comments = ({ blog }) => {
 
     return (
         <div>
-            <h3>Comments</h3>
+            <h3 className='pb-4 pt-4'>Comments</h3>
             <Form onSubmit={handleSubmit}>
                 <FormGroup>
                     <Form.Control {...comment} />
-                    <Button variant="warning" type='submit' >Add comment</Button>
+                    <Button className='fw-bold hover-overlay mt-2 mb-4' variant="warning" type='submit' >Add comment</Button>
                 </FormGroup>
             </Form>
             <ul>
                 {
                     blog.comments.map(bc => {
                         return (
-                            <li key={bc.id}>{bc.comment}</li>
+                            <li className='text-capitalize' key={bc.id}>{bc.comment}</li>
                         )
                     })
                 }

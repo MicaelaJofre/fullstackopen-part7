@@ -81,7 +81,6 @@ export const blogDelete = (id) => {
 
 
 export const addComment = (blog, content) => {
-    console.log(content)
     return async dispatch => {
         try {
             const { comment, id } = await servicesBlog.createComment(blog.id, { comment: content })

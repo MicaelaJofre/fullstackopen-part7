@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { blogDelete, blogLikes } from '../reducers/blogsReducer'
 import Comments from './Comments'
+import Notification from './Notification'
 
 import { Button, Table } from 'react-bootstrap'
 
@@ -21,39 +22,44 @@ const Blog = ({ blog }) => {
 
     return (
         <div>
-            <h2>Blog App</h2>
+            <Notification />
+            <h2 className='pb-4 pt-4'>Blog App</h2>
             <Table striped bordered hover variant="dark">
                 {
                     blog && user
                         ? <>
                             <thead>
                                 <tr>
-                                    <th>{blog.title}</th>
-                                    <th></th>
+                                    <th>Title:</th>
+                                    <td className='text-capitalize'>{blog.title}</td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>{blog.url}</td>
-                                    <td></td>
+                                    <th>Url: </th>
+                                    <td className='text-capitalize'>{blog.url}</td>
                                 </tr>
                                 <tr>
-                                    <td>Likes: {blog.likes}</td>
-                                    <td><Button variant="warning" onClick={() => handleLikes(blog)}>like</Button></td>
+                                    <th>Likes: </th>
+                                    <td>{blog.likes} <Button className='fw-bold hover-overlay ms-2' variant="warning" onClick={() => handleLikes(blog)}>like</Button></td>
                                 </tr>
                                 <tr>
-                                    <td>Added by {blog.author}</td>
-                                    <td></td>
+                                    <th>Author: </th>
+                                    <td className='text-capitalize'>Added by {blog.author}</td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        {user.username === blog.user.username && <Button variant="warning" onClick={() => handleDelete(blog)}>Remove</Button>}
+                                        {user.username === blog.user.username && <Button className='fw-bold hover-overlay' variant="warning" onClick={() => handleDelete(blog)}>Remove</Button>}
                                     </td>
                                     <td></td>
                                 </tr>
                             </tbody>
                         </>
-                        : <p>No blogs created</p>
+                        : <tbody>
+                            <tr>
+                                <td>No blog created</td>
+                            </tr>
+                        </tbody>
                 }
             </Table>
             <Comments blog={blog} />

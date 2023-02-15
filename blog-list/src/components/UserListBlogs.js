@@ -4,22 +4,24 @@ const UserListBlogs = ({ blogsUser }) => {
 
     return (
         <div>
-            <h1>{blogsUser && blogsUser.name}</h1>
-            <h2>Added blogs</h2>
+            <h2 className='pb-4 pt-4 text-capitalize'>{blogsUser && blogsUser.name}</h2>
+            <p className='pb-2 fw-bold fs-5'>Added blogs</p>
             <Table striped bordered hover variant="dark">
                 <tbody>
                     {
                         blogsUser.blogs.length !== 0
                             ? blogsUser.blogs.map(b => {
                                 return (
-                                    <tr key={b.id}>
+                                    <tr key={b.id} className='text-capitalize'>
                                         <td>
                                             {b.title}
                                         </td>
                                     </tr>
                                 )
                             })
-                            : <p>Not blog</p>
+                            : <tr>
+                                <td>Not blog</td>
+                            </tr>
                     }
                 </tbody>
             </Table>
