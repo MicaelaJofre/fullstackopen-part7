@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { initializeUsers } from '../reducers/usersReducer'
 
+import { Table } from 'react-bootstrap'
 
 
 const Users = () => {
@@ -17,16 +18,24 @@ const Users = () => {
         <div>
             <h2>Users</h2>
             <span><strong>blog created</strong></span>
-            {
-                users.map(user => {
-                    return (
-                        <div key={user.id}>
-                            <Link to={`/users/${user.id}`}><strong>{user.name} </strong></Link>
-                            <span>{user.blogs.length}</span>
-                        </div>
-                    )
-                })
-            }
+            <Table striped bordered hover variant="dark">
+                <tbody>
+                    {
+                        users.map(user => {
+                            return (
+                                <tr key={user.id}>
+                                    <td>
+                                        <Link to={`/users/${user.id}`}><strong>{user.name} </strong></Link>
+                                    </td>
+                                    <td>
+                                        <span>{user.blogs.length}</span>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }
+                </tbody>
+            </Table>
         </div>
     )
 }

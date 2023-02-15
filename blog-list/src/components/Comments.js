@@ -2,6 +2,8 @@ import { useDispatch } from 'react-redux'
 import { useField } from '../hooks/form'
 import { addComment } from '../reducers/blogsReducer'
 
+import { Form, Button, FormGroup } from 'react-bootstrap'
+
 const Comments = ({ blog }) => {
     const dispatch = useDispatch()
 
@@ -17,10 +19,12 @@ const Comments = ({ blog }) => {
     return (
         <div>
             <h3>Comments</h3>
-            <form onSubmit={handleSubmit}>
-                <input {...comment} />
-                <button>Add comment</button>
-            </form>
+            <Form onSubmit={handleSubmit}>
+                <FormGroup>
+                    <Form.Control {...comment} />
+                    <Button variant="warning" type='submit' >Add comment</Button>
+                </FormGroup>
+            </Form>
             <ul>
                 {
                     blog.comments.map(bc => {

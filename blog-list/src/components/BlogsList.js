@@ -6,6 +6,8 @@ import BlogForm from './BlogForm'
 import LoginForm from './LoginForm'
 import Notification from './Notification'
 
+import { Table } from 'react-bootstrap'
+
 const BlogsList = () => {
     const blogs = useSelector(state => [...state.blogs].sort((a, b) => b.likes - a.likes))
     const user = useSelector(state => state.user)
@@ -31,20 +33,26 @@ const BlogsList = () => {
                     </>
                     : <LoginForm createUser={handleUser} />
             }
-            {
-                user
-                    ? blogs.length !== 0
-                        ? blogs.map(blog =>
-                            <div key={blog.id} className='blogList blog' >
-                                <div className='blogList'>
-                                    <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-                                </div>
+            <Table striped bordered hover variant="dark">
+                <tbody>
+                    {
+                        user
+                            ? blogs.length !== 0
+                                ? blogs.map(blog =>
+                                    <tr key={blog.id}>
+                                        <td>
+                                            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                                        </td>
 
-                            </div>
-                        )
-                        : <p>No blog created</p>
-                    : null
-            }
+                                    </tr>
+                                )
+                                : <p>No blog created</p>
+                            : null
+                    }
+
+                </tbody>
+            </Table>
+
 
         </div>
     )

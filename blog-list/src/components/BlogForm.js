@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Togglable from './Togglable'
 import { useField } from '../hooks/form'
 
-
+import { Form, Button, FormGroup } from 'react-bootstrap'
 
 const BlogForm = ({ createBlog }) => {
 
@@ -32,21 +32,17 @@ const BlogForm = ({ createBlog }) => {
         return (
             <>
                 <h2>Create a new blog</h2>
-                <form onSubmit={handleCreateBlog}>
-                    <div>
-                        title:
-                        <input {...title} />
-                    </div>
-                    <div>
-                        author:
-                        <input {...author} />
-                    </div>
-                    <div>
-                        url:
-                        <input {...url} />
-                    </div>
-                    <button id='create-button' type="submit">Create</button>
-                </form>
+                <Form onSubmit={handleCreateBlog}>
+                    <FormGroup>
+                        <Form.Label>Title:</Form.Label>
+                        <Form.Control {...title} />
+                        <Form.Label>Author:</Form.Label>
+                        <Form.Control {...author} />
+                        <Form.Label>Url:</Form.Label>
+                        <Form.Control {...url} />
+                        <Button variant="warning" id='create-button' type="submit">Create</Button>
+                    </FormGroup>
+                </Form>
             </>
         )
     }
