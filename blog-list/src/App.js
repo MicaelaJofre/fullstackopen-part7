@@ -9,7 +9,6 @@ import Users from './components/Users'
 import Menu from './components/Menu'
 import Blog from './components/Blog'
 import BlogsList from './components/BlogsList'
-import './main.css'
 
 const App = () => {
     const blogs = useSelector(state => [...state.blogs].sort((a, b) => b.likes - a.likes))
@@ -33,7 +32,7 @@ const App = () => {
         : null
 
     return (
-        <div>
+        <div className="container">
             <Menu />
             <Routes>
                 <Route path='/' element={<BlogsList blog={blog} />} />
