@@ -27,9 +27,6 @@ const blogsSlice = createSlice({
 
 const { initializeBlog, createBlog, removeBlog, updateBlog } = blogsSlice.actions
 
-
-
-
 export const getBlogs = () => {
     return async dispatch => {
         const blogs = await servicesBlog.getAll()
@@ -73,10 +70,31 @@ export const blogDelete = (id) => {
         try {
             const { status } = await servicesBlog.remove(id)
             status === 204 && dispatch(removeBlog(id))
+            dispatch(createNotification('The selected blog was successfully deleted', 'message', 2))
         } catch (error) {
             error.response.status === 401
                 ? dispatch(createNotification('User not authorized to remove this blog', 'error', 2))
                 : dispatch(createNotification('Error deleting blog', 'error', 2))
+        }
+    }
+}
+
+
+export const addComment = (blog, content) => {
+    console.log(content)
+    return async dispatch => {
+        try {
+            const { comment, id } = await servicesBlog.createComment(blog.id, { comment: content })
+            const newComment = { comment, id }
+            const updatedBlog = { ...blog, comments: blog.comments.concat(newComment) }
+
+            dispatch(updateBlog(updatedBlog))
+
+            const message = `Comment added to blog ${updatedBlog.content}`
+            dispatch(createNotification(message, 'success', 5))
+        } catch (error) {
+            const message = 'Error creating a new comment '
+            dispatch(createNotification(message, 'error', 5))
         }
     }
 }
